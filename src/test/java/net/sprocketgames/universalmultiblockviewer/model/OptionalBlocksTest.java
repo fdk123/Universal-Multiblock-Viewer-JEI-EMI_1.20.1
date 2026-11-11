@@ -31,7 +31,7 @@ class OptionalBlocksTest {
         List<MaterialEntry> required = MultiblockMaterials.forVariant(variant);
         List<MaterialEntry> optional = MultiblockMaterials.optionalForVariant(variant);
         assertEquals(1, required.size());
-        assertEquals(2, required.getFirst().count());
+        assertEquals(2, required.get(0).count());
         assertEquals(2, optional.size());
         assertEquals(1, optional.stream().filter(entry -> entry.requirement().defaultBlock().equals(STONE)).findFirst().orElseThrow().count());
         assertEquals(DIRT, optional.stream().filter(entry -> entry.requirement().defaultBlock().equals(DIRT)).findFirst().orElseThrow().requirement().defaultBlock());
@@ -40,14 +40,14 @@ class OptionalBlocksTest {
     @Test
     void optionalTagsResolveToSelectableConcreteBlocks() {
         BlockRequirement taggedOptional = new BlockRequirement(List.of(
-            new BlockOption(BlockOption.Kind.TAG, ResourceLocation.parse("test:optional_blocks"))), 0, "", true);
+            new BlockOption(BlockOption.Kind.TAG, new ResourceLocation("test:optional_blocks"))), 0, "", true);
 
         BlockRequirement resolved = ResolvedAlternatives.resolve(taggedOptional, tag -> Stream.of(
-            ResourceLocation.parse("minecraft:stone"), ResourceLocation.parse("minecraft:dirt"), ResourceLocation.parse("minecraft:grass_block")));
+            new ResourceLocation("minecraft:stone"), new ResourceLocation("minecraft:dirt"), new ResourceLocation("minecraft:grass_block")));
 
         assertTrue(resolved.optional());
-        assertEquals(List.of(ResourceLocation.parse("minecraft:stone"), ResourceLocation.parse("minecraft:dirt"),
-            ResourceLocation.parse("minecraft:grass_block")), resolved.options().stream().map(BlockOption::id).toList());
+        assertEquals(List.of(new ResourceLocation("minecraft:stone"), new ResourceLocation("minecraft:dirt"),
+            new ResourceLocation("minecraft:grass_block")), resolved.options().stream().map(BlockOption::id).toList());
     }
 
     @Test
@@ -60,8 +60,8 @@ class OptionalBlocksTest {
         StructureVariant upgraded = variant("upgraded", Map.of(
             new GridPos(0, 0, 0), required,
             new GridPos(1, 0, 0), optional));
-        MultiblockDefinition definition = new MultiblockDefinition(ResourceLocation.parse("test:optional"), "Optional", "",
-            List.of(ResourceLocation.parse("minecraft:stone")), List.of(), "basic", Map.of("basic", basic, "upgraded", upgraded));
+        MultiblockDefinition definition = new MultiblockDefinition(new ResourceLocation("test:optional"), "Optional", "",
+            List.of(new ResourceLocation("minecraft:stone")), List.of(), "basic", Map.of("basic", basic, "upgraded", upgraded));
         ViewerState state = new ViewerState(definition);
 
         assertTrue(state.hasOptionalBlocks());
@@ -92,8 +92,8 @@ class OptionalBlocksTest {
         BlockRequirement optionalChoices = new BlockRequirement(List.of(DIRT, STONE), 0, "", true);
         StructureVariant first = variant("first", Map.of(new GridPos(0, 0, 0), optionalChoices));
         StructureVariant second = variant("second", Map.of(new GridPos(0, 0, 0), optionalChoices));
-        MultiblockDefinition definition = new MultiblockDefinition(ResourceLocation.parse("test:optional_choice"), "Optional", "",
-            List.of(ResourceLocation.parse("minecraft:stone")), List.of(), "first", Map.of("first", first, "second", second));
+        MultiblockDefinition definition = new MultiblockDefinition(new ResourceLocation("test:optional_choice"), "Optional", "",
+            List.of(new ResourceLocation("minecraft:stone")), List.of(), "first", Map.of("first", first, "second", second));
         ViewerState state = new ViewerState(definition);
         state.toggleOptionalBlocks();
         state.selectOrToggle(new GridPos(0, 0, 0));
@@ -106,7 +106,7 @@ class OptionalBlocksTest {
     }
 
     private static BlockOption block(String id) {
-        return new BlockOption(BlockOption.Kind.BLOCK, ResourceLocation.parse(id));
+        return new BlockOption(BlockOption.Kind.BLOCK, new ResourceLocation(id));
     }
 
     private static StructureVariant variant(String id, Map<GridPos, BlockRequirement> cells) {

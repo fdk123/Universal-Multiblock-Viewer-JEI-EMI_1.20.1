@@ -26,7 +26,7 @@ import net.sprocketgames.universalmultiblockviewer.viewer.ViewerState;
 /** JEI host adapter. The model, material calculation, projection, and state all remain host-neutral. */
 public final class JeiMultiblockCategory implements IRecipeCategory<MultiblockDefinition> {
     public static final RecipeType<MultiblockDefinition> TYPE = new RecipeType<>(
-        ResourceLocation.fromNamespaceAndPath(UniversalMultiblockViewer.MOD_ID, "multiblock"), MultiblockDefinition.class);
+        new ResourceLocation(UniversalMultiblockViewer.MOD_ID, "multiblock"), MultiblockDefinition.class);
     private final IDrawable background;
     private final IDrawable icon;
     private final Map<ResourceLocation, ViewerState> states = new ConcurrentHashMap<>();

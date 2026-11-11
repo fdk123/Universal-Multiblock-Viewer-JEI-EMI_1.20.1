@@ -38,7 +38,9 @@ public final class DevStructureCapture {
     public static void clear() { first = null; second = null; master = null; masterLookup = LookupMode.U; }
     public static Optional<Bounds> bounds() {
         if (first == null || second == null) return Optional.empty();
-        return Optional.of(new Bounds(BlockPos.min(first, second), BlockPos.max(first, second)));
+        return Optional.of(new Bounds(
+            new BlockPos(Math.min(first.getX(), second.getX()), Math.min(first.getY(), second.getY()), Math.min(first.getZ(), second.getZ())),
+            new BlockPos(Math.max(first.getX(), second.getX()), Math.max(first.getY(), second.getY()), Math.max(first.getZ(), second.getZ()))));
     }
     public static Path save(String namespace, String fileName) throws IOException {
         Bounds bounds = bounds().orElseThrow(() -> new IllegalStateException("Select both corners first."));
@@ -135,7 +137,7 @@ public final class DevStructureCapture {
         if (block.asItem() != net.minecraft.world.item.Items.AIR) return null;
         List<String> candidates = List.of(blockId.getPath().replace("_glyph_", "_"), blockId.getPath().replace("glyph_", ""));
         for (String path : candidates) {
-            ResourceLocation candidate = ResourceLocation.fromNamespaceAndPath(blockId.getNamespace(), path);
+            ResourceLocation candidate = new ResourceLocation(blockId.getNamespace(), path);
             var item = BuiltInRegistries.ITEM.get(candidate);
             if (item != null && item != net.minecraft.world.item.Items.AIR) return candidate;
         }

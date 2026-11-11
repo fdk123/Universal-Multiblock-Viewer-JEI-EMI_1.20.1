@@ -1,0 +1,81 @@
+{
+  "format": 1,
+  "id": "umv_occultism:possess_foliot",
+  "title": "Hedyrin's Lure",
+  "description": "Occultism ritual pentacle for Minecraft 1.20.1.",
+  "provenance": {
+    "source_mod": "occultism",
+    "tested_version": "1.158.0",
+    "notes": "Generated from Occultism Modonomicon multiblock possess_foliot."
+  },
+  "lookups": {
+    "U": [
+      "occultism:golden_sacrificial_bowl"
+    ]
+  },
+  "default_variant": "ritual_layout",
+  "variants": [
+    {
+      "id": "ritual_layout",
+      "title": "Ritual layout",
+      "palette": {
+        "0": {
+          "any_of": [
+            {
+              "block": "occultism:golden_sacrificial_bowl"
+            }
+          ],
+          "default": "occultism:golden_sacrificial_bowl"
+        },
+        "C": {
+          "any_of": [
+            {
+              "block": "minecraft:candle"
+            },
+            {
+              "tag": "minecraft:candles"
+            }
+          ],
+          "default": "minecraft:candle"
+        },
+        "G": {
+          "any_of": [
+            {
+              "block": "occultism:chalk_glyph_gold",
+              "material": {
+                "item": "occultism:chalk_gold",
+                "kind": "reusable_tool"
+              }
+            }
+          ],
+          "default": "occultism:chalk_glyph_gold"
+        },
+        "W": {
+          "any_of": [
+            {
+              "block": "occultism:chalk_glyph_white",
+              "material": {
+                "item": "occultism:chalk_white",
+                "kind": "reusable_tool"
+              }
+            }
+          ],
+          "default": "occultism:chalk_glyph_white"
+        }
+      },
+      "layers": [
+        [
+          "   GGG   ",
+          "  GC CG  ",
+          " GW   WG ",
+          "GC W W CG",
+          "G   0   G",
+          "GC W W CG",
+          " GW   WG ",
+          "  GC CG  ",
+          "   GGG   "
+        ]
+      ]
+    }
+  ]
+}

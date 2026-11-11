@@ -1,0 +1,69 @@
+{
+  "format": 1,
+  "id": "umv_occultism:summon_foliot",
+  "title": "Aviar's Circle",
+  "description": "Occultism ritual pentacle for Minecraft 1.20.1.",
+  "provenance": {
+    "source_mod": "occultism",
+    "tested_version": "1.158.0",
+    "notes": "Generated from Occultism Modonomicon multiblock summon_foliot."
+  },
+  "lookups": {
+    "U": [
+      "occultism:golden_sacrificial_bowl"
+    ]
+  },
+  "default_variant": "ritual_layout",
+  "variants": [
+    {
+      "id": "ritual_layout",
+      "title": "Ritual layout",
+      "palette": {
+        "0": {
+          "any_of": [
+            {
+              "block": "occultism:golden_sacrificial_bowl"
+            }
+          ],
+          "default": "occultism:golden_sacrificial_bowl"
+        },
+        "C": {
+          "any_of": [
+            {
+              "block": "minecraft:candle"
+            },
+            {
+              "tag": "minecraft:candles"
+            }
+          ],
+          "default": "minecraft:candle"
+        },
+        "W": {
+          "any_of": [
+            {
+              "block": "occultism:chalk_glyph_white",
+              "material": {
+                "item": "occultism:chalk_white",
+                "kind": "reusable_tool"
+              }
+            }
+          ],
+          "default": "occultism:chalk_glyph_white"
+        }
+      },
+      "layers": [
+        [
+          "         ",
+          "   WCW   ",
+          "  W W W  ",
+          " W  W  W ",
+          " CWW0WWC ",
+          " W  W  W ",
+          "  W W W  ",
+          "   WCW   ",
+          "         "
+        ]
+      ]
+    }
+  ]
+}

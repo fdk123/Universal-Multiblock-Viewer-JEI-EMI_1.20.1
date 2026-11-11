@@ -1,9 +1,9 @@
 package net.sprocketgames.universalmultiblockviewer.client;
 
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.sprocketgames.universalmultiblockviewer.UniversalMultiblockViewer;
 import net.sprocketgames.universalmultiblockviewer.data.MultiblockDefinitionReloadListener;
 

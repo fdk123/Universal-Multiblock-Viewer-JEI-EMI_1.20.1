@@ -17,13 +17,13 @@ import org.junit.jupiter.api.Test;
 class DevInstantBuildPlanTest {
     @Test void usesTheResolvedChoicesAndOptionalToggleForTheWholeVariant() {
         GridPos required = new GridPos(0, 0, 0); GridPos optional = new GridPos(1, 2, 0);
-        BlockOption stone = new BlockOption(BlockOption.Kind.BLOCK, ResourceLocation.parse("minecraft:stone"));
-        BlockOption granite = new BlockOption(BlockOption.Kind.BLOCK, ResourceLocation.parse("minecraft:granite"));
+        BlockOption stone = new BlockOption(BlockOption.Kind.BLOCK, new ResourceLocation("minecraft:stone"));
+        BlockOption granite = new BlockOption(BlockOption.Kind.BLOCK, new ResourceLocation("minecraft:granite"));
         Map<GridPos, BlockRequirement> cells = new LinkedHashMap<>();
         cells.put(required, new BlockRequirement(List.of(stone, granite), 0, "", false));
         cells.put(optional, new BlockRequirement(List.of(granite), 0, "", true));
         StructureVariant variant = new StructureVariant("base", "Base", 2, 3, 1, cells);
-        ViewerState state = new ViewerState(new MultiblockDefinition(ResourceLocation.parse("test:plan"), "Test Build", "", List.of(ResourceLocation.parse("minecraft:stick")), "base", Map.of("base", variant)));
+        ViewerState state = new ViewerState(new MultiblockDefinition(new ResourceLocation("test:plan"), "Test Build", "", List.of(new ResourceLocation("minecraft:stick")), "base", Map.of("base", variant)));
         state.selectOrToggle(required); state.setSelectedOption(1); state.setLayer(0);
         assertEquals(List.of(granite), DevInstantBuildPlan.from(state).placements().stream().map(DevInstantBuildPlan.Placement::option).toList());
         state.toggleOptionalBlocks();
@@ -31,7 +31,7 @@ class DevInstantBuildPlanTest {
     }
 
     @Test void rotatesAndNormalisesTheBuildFootprint() {
-        BlockOption stone = new BlockOption(BlockOption.Kind.BLOCK, ResourceLocation.parse("minecraft:stone"));
+        BlockOption stone = new BlockOption(BlockOption.Kind.BLOCK, new ResourceLocation("minecraft:stone"));
         DevInstantBuildPlan plan = new DevInstantBuildPlan("Rotation", List.of(
             new DevInstantBuildPlan.Placement(new GridPos(0, 0, 0), stone),
             new DevInstantBuildPlan.Placement(new GridPos(2, 0, 1), stone)

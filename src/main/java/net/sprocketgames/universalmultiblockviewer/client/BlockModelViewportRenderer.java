@@ -4,7 +4,7 @@ import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -30,16 +30,14 @@ import net.minecraft.world.level.block.AbstractSkullBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.util.RandomSource;
-import net.neoforged.neoforge.client.GlStateBackup;
-import net.neoforged.neoforge.client.RenderTypeHelper;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.minecraftforge.client.RenderTypeHelper;
+import net.minecraftforge.client.model.data.ModelData;
 import net.sprocketgames.universalmultiblockviewer.model.BlockOption;
 import net.sprocketgames.universalmultiblockviewer.model.GridPos;
 import net.sprocketgames.universalmultiblockviewer.viewer.ViewerLayout;
 import net.sprocketgames.universalmultiblockviewer.viewer.ViewerIngredientResolver;
 import net.sprocketgames.universalmultiblockviewer.viewer.ViewerState;
 import org.joml.Matrix4f;
-import org.joml.Matrix4fStack;
 import org.joml.Vector4f;
 
 /**
@@ -69,11 +67,9 @@ public final class BlockModelViewportRenderer {
         graphics.flush();
 
         RenderTarget mainTarget = minecraft.getMainRenderTarget();
-        GlStateBackup stateBackup = new GlStateBackup();
-        RenderSystem.backupGlState(stateBackup);
         RenderSystem.backupProjectionMatrix();
-        Matrix4fStack modelView = RenderSystem.getModelViewStack();
-        modelView.pushMatrix();
+        PoseStack modelView = RenderSystem.getModelViewStack();
+        modelView.pushPose();
         try {
             if (state.darkViewportBackground()) {
                 viewportTarget.setClearColor(0.055F, 0.052F, 0.047F, 1.0F);
@@ -88,7 +84,7 @@ public final class BlockModelViewportRenderer {
                 new Matrix4f().setOrtho(0.0F, targetWidth, targetHeight, 0.0F, 1000.0F, 3000.0F),
                 VertexSorting.ORTHOGRAPHIC_Z
             );
-            modelView.identity();
+            modelView.setIdentity();
             modelView.translate(0.0F, 0.0F, -2000.0F);
             RenderSystem.applyModelViewMatrix();
             Lighting.setupFor3DItems();
@@ -98,39 +94,43 @@ public final class BlockModelViewportRenderer {
         } finally {
             mainTarget.bindWrite(false);
             RenderSystem.viewport(0, 0, mainTarget.viewWidth, mainTarget.viewHeight);
-            modelView.popMatrix();
+            modelView.popPose();
             RenderSystem.applyModelViewMatrix();
             Lighting.setupFor3DItems();
             RenderSystem.restoreProjectionMatrix();
-            RenderSystem.restoreGlState(stateBackup);
+            RenderSystem.enableDepthTest();
+            RenderSystem.depthMask(true);
+            RenderSystem.enableCull();
         }
         drawTargetIntoGui(graphics, left, top, width, height);
     }
 
     private static void drawTargetIntoGui(GuiGraphics graphics, int left, int top, int width, int height) {
-        GlStateBackup stateBackup = new GlStateBackup();
-        RenderSystem.backupGlState(stateBackup);
         try {
             RenderSystem.disableDepthTest();
             RenderSystem.depthMask(false);
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, viewportTarget.getColorTextureId());
             var pose = graphics.pose().last();
-            var vertices = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-            vertices.addVertex(pose, left, top + height, 0.0F).setUv(0.0F, 0.0F);
-            vertices.addVertex(pose, left + width, top + height, 0.0F).setUv(1.0F, 0.0F);
-            vertices.addVertex(pose, left + width, top, 0.0F).setUv(1.0F, 1.0F);
-            vertices.addVertex(pose, left, top, 0.0F).setUv(0.0F, 1.0F);
-            BufferUploader.drawWithShader(vertices.buildOrThrow());
+            var vertices = Tesselator.getInstance().getBuilder();
+        vertices.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+            vertices.vertex(pose.pose(), left, top + height, 0.0F).uv(0.0F, 0.0F);
+            vertices.vertex(pose.pose(), left + width, top + height, 0.0F).uv(1.0F, 0.0F);
+            vertices.vertex(pose.pose(), left + width, top, 0.0F).uv(1.0F, 1.0F);
+            vertices.vertex(pose.pose(), left, top, 0.0F).uv(0.0F, 1.0F);
+            BufferUploader.drawWithShader(vertices.end());
         } finally {
-            RenderSystem.restoreGlState(stateBackup);
+            RenderSystem.enableDepthTest();
+            RenderSystem.depthMask(true);
+            RenderSystem.enableCull();
         }
     }
 
     private static void renderScene(ViewerState state, Minecraft minecraft, int width, int height, float guiScale) {
         int maxDimension = Math.max(state.variant().width(), Math.max(state.variant().height(), state.variant().depth()));
         float scale = Math.max(4.5F, 42.0F / maxDimension) * (float) state.zoom() * guiScale;
-        try (ByteBufferBuilder sceneMemory = new ByteBufferBuilder(262_144)) {
+        {
+            BufferBuilder sceneMemory = new BufferBuilder(262_144);
             MultiBufferSource.BufferSource sceneBuffers = MultiBufferSource.immediate(sceneMemory);
             PoseStack pose = new PoseStack();
             pose.pushPose();
@@ -183,14 +183,16 @@ public final class BlockModelViewportRenderer {
         }
         renderSelectionOverlays(state, pose);
         if (state.showFloorGrid()) {
-            var gridVertices = Tesselator.getInstance().begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
+            var gridVertices = Tesselator.getInstance().getBuilder();
+        gridVertices.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
             renderFloorGrid(state, pose, gridVertices);
             drawViewportLines(gridVertices, true, 1.0F);
         }
         if (!hasOutline) return;
         renderSolidOutlines(state, pose, visibleCells);
 
-        var openOutlineVertices = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        var openOutlineVertices = Tesselator.getInstance().getBuilder();
+        openOutlineVertices.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         boolean hasOpenOutline = false;
         for (var position : visibleCells) {
             var requirement = state.variant().cells().get(position);
@@ -222,7 +224,8 @@ public final class BlockModelViewportRenderer {
 
     /** Uses Minecraft's normal-based line renderer for stable, depth-aware solid-block edges. */
     private static void renderSolidOutlines(ViewerState state, PoseStack pose, Iterable<GridPos> visibleCells) {
-        try (ByteBufferBuilder memory = new ByteBufferBuilder(65_536)) {
+        {
+            BufferBuilder memory = new BufferBuilder(65_536);
             MultiBufferSource.BufferSource buffers = MultiBufferSource.immediate(memory);
             var vertices = buffers.getBuffer(RenderType.lines());
             boolean hasSolidOutline = false;
@@ -267,7 +270,7 @@ public final class BlockModelViewportRenderer {
         RenderSystem.defaultBlendFunc();
         RenderSystem.lineWidth(lineWidth);
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        BufferUploader.drawWithShader(vertices.buildOrThrow());
+        BufferUploader.drawWithShader(vertices.end());
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();
     }
@@ -285,7 +288,8 @@ public final class BlockModelViewportRenderer {
     /** A texture-free amber selection tint, kept separate from the red selection outline. */
     private static void renderSelectionOverlays(ViewerState state, PoseStack pose) {
         if (state.selected() == null) return;
-        var vertices = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        var vertices = Tesselator.getInstance().getBuilder();
+        vertices.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         addBoxOverlay(vertices, pose, state.selected(), 1.0F, 0.72F, 0.08F, 0.30F);
         RenderSystem.enableDepthTest();
         RenderSystem.depthMask(false);
@@ -293,7 +297,7 @@ public final class BlockModelViewportRenderer {
         RenderSystem.defaultBlendFunc();
         RenderSystem.disableCull();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        BufferUploader.drawWithShader(vertices.buildOrThrow());
+        BufferUploader.drawWithShader(vertices.end());
         RenderSystem.enableCull();
         RenderSystem.depthMask(true);
     }
@@ -359,10 +363,10 @@ public final class BlockModelViewportRenderer {
         float offsetX = -deltaY / length * halfWidth;
         float offsetY = deltaX / length * halfWidth;
         Matrix4f identity = new Matrix4f();
-        vertices.addVertex(identity, start.x() - offsetX, start.y() - offsetY, start.z()).setColor(red, green, blue, alpha);
-        vertices.addVertex(identity, end.x() - offsetX, end.y() - offsetY, end.z()).setColor(red, green, blue, alpha);
-        vertices.addVertex(identity, end.x() + offsetX, end.y() + offsetY, end.z()).setColor(red, green, blue, alpha);
-        vertices.addVertex(identity, start.x() + offsetX, start.y() + offsetY, start.z()).setColor(red, green, blue, alpha);
+        vertices.vertex(identity, start.x() - offsetX, start.y() - offsetY, start.z()).color(red, green, blue, alpha);
+        vertices.vertex(identity, end.x() - offsetX, end.y() - offsetY, end.z()).color(red, green, blue, alpha);
+        vertices.vertex(identity, end.x() + offsetX, end.y() + offsetY, end.z()).color(red, green, blue, alpha);
+        vertices.vertex(identity, start.x() + offsetX, start.y() + offsetY, start.z()).color(red, green, blue, alpha);
     }
 
     private static void addBoxOutline(com.mojang.blaze3d.vertex.VertexConsumer vertices, PoseStack pose,
@@ -393,8 +397,8 @@ public final class BlockModelViewportRenderer {
                                 double startX, double startY, double startZ, double endX, double endY, double endZ,
                                 float red, float green, float blue, float alpha) {
         var currentPose = pose.last();
-        vertices.addVertex(currentPose, (float) startX, (float) startY, (float) startZ).setColor(red, green, blue, alpha);
-        vertices.addVertex(currentPose, (float) endX, (float) endY, (float) endZ).setColor(red, green, blue, alpha);
+        vertices.vertex(currentPose.pose(), (float) startX, (float) startY, (float) startZ).color(red, green, blue, alpha);
+        vertices.vertex(currentPose.pose(), (float) endX, (float) endY, (float) endZ).color(red, green, blue, alpha);
     }
 
 
@@ -420,10 +424,10 @@ public final class BlockModelViewportRenderer {
                                 float x1, float y1, float z1, float x2, float y2, float z2,
                                 float x3, float y3, float z3, float x4, float y4, float z4,
                                 float red, float green, float blue, float alpha) {
-        vertices.addVertex(pose, x1, y1, z1).setColor(red, green, blue, alpha);
-        vertices.addVertex(pose, x2, y2, z2).setColor(red, green, blue, alpha);
-        vertices.addVertex(pose, x3, y3, z3).setColor(red, green, blue, alpha);
-        vertices.addVertex(pose, x4, y4, z4).setColor(red, green, blue, alpha);
+        vertices.vertex(pose.pose(), x1, y1, z1).color(red, green, blue, alpha);
+        vertices.vertex(pose.pose(), x2, y2, z2).color(red, green, blue, alpha);
+        vertices.vertex(pose.pose(), x3, y3, z3).color(red, green, blue, alpha);
+        vertices.vertex(pose.pose(), x4, y4, z4).color(red, green, blue, alpha);
     }
 
     /**

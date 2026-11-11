@@ -121,7 +121,7 @@ public final class MaterialStrip {
         if (maximum == 0) return true;
         // The right-most clickable pixel must map to the final entry exactly.
         // Dividing by WIDTH left a fractional gap at the end of a dragged thumb.
-        float fraction = Math.clamp((float) ((x - X) / (WIDTH - 1.0D)), 0.0F, 1.0F);
+        float fraction = net.minecraft.util.Mth.clamp((float) ((x - X) / (WIDTH - 1.0D)), 0.0F, 1.0F);
         state.setMaterialTargetOffset(fraction * maximum);
         return true;
     }
@@ -144,10 +144,10 @@ public final class MaterialStrip {
     /** The first Uses association is the conventional controller/core; Recipes is the fallback. */
     private static java.util.Optional<net.minecraft.resources.ResourceLocation> primaryLookupItem(ViewerState state) {
         if (!state.definition().useLookupItems().isEmpty()) {
-            return java.util.Optional.of(state.definition().useLookupItems().getFirst());
+            return java.util.Optional.of(state.definition().useLookupItems().get(0));
         }
         if (!state.definition().recipeLookupItems().isEmpty()) {
-            return java.util.Optional.of(state.definition().recipeLookupItems().getFirst());
+            return java.util.Optional.of(state.definition().recipeLookupItems().get(0));
         }
         return java.util.Optional.empty();
     }

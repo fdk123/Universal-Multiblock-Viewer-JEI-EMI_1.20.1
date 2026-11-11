@@ -208,7 +208,7 @@ public final class ViewerState {
 
     public void scrollAlternativesSmooth(double delta, int visibleChoices, int choiceCount) {
         int maximum = Math.max(0, choiceCount - visibleChoices);
-        alternativeTargetScroll = Math.clamp(alternativeTargetScroll + Math.clamp(delta, -1.0D, 1.0D), 0.0D, maximum);
+        alternativeTargetScroll = net.minecraft.util.Mth.clamp(alternativeTargetScroll + net.minecraft.util.Mth.clamp(delta, -1.0D, 1.0D), 0.0D, maximum);
     }
 
     public void setAlternativeTargetOffset(double offset, int visibleChoices) {
@@ -218,7 +218,7 @@ public final class ViewerState {
     }
 
     public void setAlternativeTargetOffset(double offset, int visibleChoices, int choiceCount) {
-        alternativeTargetScroll = Math.clamp(offset, 0.0D, Math.max(0, choiceCount - visibleChoices));
+        alternativeTargetScroll = net.minecraft.util.Mth.clamp(offset, 0.0D, Math.max(0, choiceCount - visibleChoices));
     }
 
     public void animateAlternativeScroll() {
@@ -236,7 +236,7 @@ public final class ViewerState {
     }
 
     public void zoomBy(double delta) {
-        zoom = Math.clamp(zoom + delta * 0.1D, MIN_ZOOM, MAX_ZOOM);
+        zoom = net.minecraft.util.Mth.clamp(zoom + delta * 0.1D, MIN_ZOOM, MAX_ZOOM);
     }
 
     /** Restores the initial camera without changing the current variant, layer, or selection. */
@@ -309,7 +309,7 @@ public final class ViewerState {
     /** Advances the horizontal BOM strip by a partial item for natural wheel scrolling. */
     public void scrollMaterialsSmooth(double delta) {
         int maximum = materialMaximum();
-        materialTargetScroll = Math.clamp(materialTargetScroll + Math.clamp(delta, -1.0D, 1.0D), 0.0D, maximum);
+        materialTargetScroll = net.minecraft.util.Mth.clamp(materialTargetScroll + net.minecraft.util.Mth.clamp(delta, -1.0D, 1.0D), 0.0D, maximum);
     }
 
     /** Advances the visual BOM position toward the wheel/track target without jumping an item at a time. */
@@ -337,7 +337,7 @@ public final class ViewerState {
 
     public void setMaterialOffset(int offset) {
         int maximum = materialMaximum();
-        materialOffset = Math.clamp(offset, 0, maximum);
+        materialOffset = net.minecraft.util.Mth.clamp(offset, 0, maximum);
         materialScroll = materialOffset;
         materialTargetScroll = materialOffset;
         lastMaterialAnimationNanos = 0L;
@@ -345,7 +345,7 @@ public final class ViewerState {
 
     /** Moves the BOM thumb toward an absolute item offset; used by scrollbar dragging. */
     public void setMaterialTargetOffset(double offset) {
-        materialTargetScroll = Math.clamp(offset, 0.0D, materialMaximum());
+        materialTargetScroll = net.minecraft.util.Mth.clamp(offset, 0.0D, materialMaximum());
     }
 
     private int materialMaximum() {

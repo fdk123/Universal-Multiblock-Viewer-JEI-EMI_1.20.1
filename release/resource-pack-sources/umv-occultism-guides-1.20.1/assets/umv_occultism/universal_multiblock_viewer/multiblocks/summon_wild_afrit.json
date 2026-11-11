@@ -1,0 +1,99 @@
+{
+  "format": 1,
+  "id": "umv_occultism:summon_wild_afrit",
+  "title": "Abras' Open Conjure",
+  "description": "Occultism ritual pentacle for Minecraft 1.20.1.",
+  "provenance": {
+    "source_mod": "occultism",
+    "tested_version": "1.158.0",
+    "notes": "Generated from Occultism Modonomicon multiblock summon_wild_afrit."
+  },
+  "lookups": {
+    "U": [
+      "occultism:golden_sacrificial_bowl"
+    ]
+  },
+  "default_variant": "ritual_layout",
+  "variants": [
+    {
+      "id": "ritual_layout",
+      "title": "Ritual layout",
+      "palette": {
+        "0": {
+          "any_of": [
+            {
+              "block": "occultism:golden_sacrificial_bowl"
+            }
+          ],
+          "default": "occultism:golden_sacrificial_bowl"
+        },
+        "C": {
+          "any_of": [
+            {
+              "block": "minecraft:candle"
+            },
+            {
+              "tag": "minecraft:candles"
+            }
+          ],
+          "default": "minecraft:candle"
+        },
+        "N": {
+          "any_of": [
+            {
+              "block": "minecraft:wither_skeleton_skull"
+            }
+          ],
+          "default": "minecraft:wither_skeleton_skull"
+        },
+        "P": {
+          "any_of": [
+            {
+              "block": "occultism:chalk_glyph_purple",
+              "material": {
+                "item": "occultism:chalk_purple",
+                "kind": "reusable_tool"
+              }
+            }
+          ],
+          "default": "occultism:chalk_glyph_purple"
+        },
+        "W": {
+          "any_of": [
+            {
+              "block": "occultism:chalk_glyph_white",
+              "material": {
+                "item": "occultism:chalk_white",
+                "kind": "reusable_tool"
+              }
+            }
+          ],
+          "default": "occultism:chalk_glyph_white"
+        },
+        "Z": {
+          "any_of": [
+            {
+              "block": "minecraft:skeleton_skull"
+            }
+          ],
+          "default": "minecraft:skeleton_skull"
+        }
+      },
+      "layers": [
+        [
+          "           ",
+          "    PPP    ",
+          "   WCWCW   ",
+          "  W WNW W  ",
+          " PCWP PWCP ",
+          " PWZ 0 ZWP ",
+          " PCWP PWCP ",
+          "  W WNW W  ",
+          "   WCWCW   ",
+          "    PPP    ",
+          "           "
+        ]
+      ]
+    }
+  ]
+}

@@ -1,5 +1,22 @@
 # Universal Multiblock Viewer (JEI/EMI)
 
+## Forge 1.20.1 backport
+
+This branch ports the original [SprocketGames project](https://github.com/sprocketaudio/Universal-Multiblock-Viewer-JEI-EMI)
+from Minecraft 1.21.1 NeoForge to Minecraft 1.20.1 Forge 47. Build with
+Java 17 using `./gradlew build`. The output JAR is in `build/libs`.
+
+Install the JAR on both client and server if you use the Creative "Build Here"
+feature. JEI and EMI are optional recipe viewers; install at least one on the
+client to see the guides. The Occultism 1.20.1 companion resource pack is at
+`release/resource-packs/universal-multiblock-viewer-occultism-guides-1.20.1.zip`.
+Enable that ZIP as a client resource pack. It contains 13 pentacles generated
+from Occultism 1.158.0 data. It is not a server datapack.
+
+The original mod and companion pack are MIT licensed; attribution and the
+license text are preserved in `LICENSE` and the companion ZIP. Occultism's
+MIT notice is also included for the converted structure data.
+
 **Interactive 3D building guides for Minecraft multiblocks, powered by JSON.**
 
 Universal Multiblock Viewer lets players explore multiblock structures directly in JEI and EMI. Rotate, pan, zoom, inspect layers, check materials, and see valid block alternatives without leaving the recipe viewer.
@@ -98,4 +115,4 @@ See the [JSON Authoring Guide](JSON%20Authoring.md) for the complete format, exa
 
 Potential future additions include more companion guide packs, additional creator tools, and compatibility with additional structure-definition formats where practical.
 
-**Minecraft 1.21.1 | NeoForge | JEI / EMI**
+**Minecraft 1.20.1 | Forge | JEI / EMI**

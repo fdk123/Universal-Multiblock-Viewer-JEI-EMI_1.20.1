@@ -9,6 +9,7 @@ import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
@@ -16,21 +17,37 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.block.Rotation;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.simple.SimpleChannel;
+import java.util.function.Supplier;
 import net.sprocketgames.universalmultiblockviewer.UniversalMultiblockViewer;
 
 public final class DevInstantBuildNetworking {
     private static final Map<UUID, LastBuild> LAST_BUILDS = new HashMap<>();
+    private static final String PROTOCOL = "3";
+    public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
+        new ResourceLocation(UniversalMultiblockViewer.MOD_ID, "main"),
+        () -> PROTOCOL, PROTOCOL::equals, PROTOCOL::equals);
 
     private DevInstantBuildNetworking() { }
-    public static void register(RegisterPayloadHandlersEvent event) {
-        event.registrar("3")
-            .playToServer(DevInstantBuildPayload.TYPE, DevInstantBuildPayload.STREAM_CODEC, DevInstantBuildNetworking::handle)
-            .playToServer(DevInstantBuildUndoPayload.TYPE, DevInstantBuildUndoPayload.STREAM_CODEC, DevInstantBuildNetworking::handleUndo);
+    public static void register() {
+        CHANNEL.registerMessage(0, DevInstantBuildPayload.class, DevInstantBuildPayload::write,
+            DevInstantBuildPayload::read, DevInstantBuildNetworking::receiveBuild);
+        CHANNEL.registerMessage(1, DevInstantBuildUndoPayload.class, DevInstantBuildUndoPayload::write,
+            DevInstantBuildUndoPayload::read, DevInstantBuildNetworking::receiveUndo);
     }
-    private static void handle(DevInstantBuildPayload payload, IPayloadContext context) {
-        if (!(context.player() instanceof ServerPlayer player)) return;
+    private static void receiveBuild(DevInstantBuildPayload payload, Supplier<NetworkEvent.Context> supplier) {
+        NetworkEvent.Context context = supplier.get();
+        context.enqueueWork(() -> { if (context.getSender() != null) handle(payload, context.getSender()); });
+        context.setPacketHandled(true);
+    }
+    private static void receiveUndo(DevInstantBuildUndoPayload payload, Supplier<NetworkEvent.Context> supplier) {
+        NetworkEvent.Context context = supplier.get();
+        context.enqueueWork(() -> { if (context.getSender() != null) handleUndo(payload, context.getSender()); });
+        context.setPacketHandled(true);
+    }
+    private static void handle(DevInstantBuildPayload payload, ServerPlayer player) {
         if (!player.getAbilities().instabuild) { fail(player, "Build Here requires Creative mode."); return; }
         if (payload.placements().isEmpty() || payload.placements().size() > 4096) { fail(player, "Invalid build plan."); return; }
         Set<BlockPos> targets = new HashSet<>();
@@ -53,8 +70,7 @@ public final class DevInstantBuildNetworking {
         player.sendSystemMessage(Component.literal("Built " + title + ": " + resolved.size() + " blocks placed."));
         UniversalMultiblockViewer.LOGGER.info("Build Here placed {} blocks for {} at {}", resolved.size(), player.getGameProfile().getName(), payload.anchor().toShortString());
     }
-    private static void handleUndo(DevInstantBuildUndoPayload payload, IPayloadContext context) {
-        if (!(context.player() instanceof ServerPlayer player)) return;
+    private static void handleUndo(DevInstantBuildUndoPayload payload, ServerPlayer player) {
         if (!player.getAbilities().instabuild) { fail(player, "Undo requires Creative mode."); return; }
         LastBuild lastBuild = LAST_BUILDS.get(player.getUUID());
         if (lastBuild == null) { fail(player, "There is no Build Here placement to undo."); return; }

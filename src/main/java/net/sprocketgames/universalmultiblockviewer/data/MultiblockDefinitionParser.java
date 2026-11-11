@@ -148,7 +148,7 @@ public final class MultiblockDefinitionParser {
     }
 
     private static Map<Character, BlockRequirement> parsePalette(JsonObject palette, String path) {
-        if (palette.isEmpty()) {
+        if (palette.size() == 0) {
             throw error(path, "may not be empty");
         }
         Map<Character, BlockRequirement> parsed = new LinkedHashMap<>();

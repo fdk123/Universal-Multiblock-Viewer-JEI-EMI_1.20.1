@@ -31,9 +31,9 @@ class MultiblockDefinitionRegistryTest {
         definitions.put(unrelated.id(), unrelated);
         MultiblockDefinitionRegistry.replace(definitions);
 
-        assertEquals(List.of(first, second), MultiblockDefinitionRegistry.forUseLookupItem(ResourceLocation.parse("test:shared_core")));
-        assertEquals(List.of(), MultiblockDefinitionRegistry.forUseLookupItem(ResourceLocation.parse("minecraft:lodestone")));
-        assertEquals(List.of(first, second), MultiblockDefinitionRegistry.forRecipeLookupItem(ResourceLocation.parse("test:shared_core")));
+        assertEquals(List.of(first, second), MultiblockDefinitionRegistry.forUseLookupItem(new ResourceLocation("test:shared_core")));
+        assertEquals(List.of(), MultiblockDefinitionRegistry.forUseLookupItem(new ResourceLocation("minecraft:lodestone")));
+        assertEquals(List.of(first, second), MultiblockDefinitionRegistry.forRecipeLookupItem(new ResourceLocation("test:shared_core")));
     }
 
     @Test
@@ -51,15 +51,15 @@ class MultiblockDefinitionRegistryTest {
         // These vanilla items deliberately already have normal JEI/EMI entries. The registry
         // only contributes guides configured for this lookup role; it does not replace recipes.
         assertEquals(List.of(forge, anvil),
-            MultiblockDefinitionRegistry.forUseLookupItem(ResourceLocation.parse("minecraft:iron_ingot")));
+            MultiblockDefinitionRegistry.forUseLookupItem(new ResourceLocation("minecraft:iron_ingot")));
         assertEquals(List.of(forge),
-            MultiblockDefinitionRegistry.forUseLookupItem(ResourceLocation.parse("minecraft:smithing_table")));
+            MultiblockDefinitionRegistry.forUseLookupItem(new ResourceLocation("minecraft:smithing_table")));
         assertEquals(List.of(forge),
-            MultiblockDefinitionRegistry.forRecipeLookupItem(ResourceLocation.parse("minecraft:iron_ingot")));
+            MultiblockDefinitionRegistry.forRecipeLookupItem(new ResourceLocation("minecraft:iron_ingot")));
         assertEquals(List.of(forge),
-            MultiblockDefinitionRegistry.forRecipeLookupItem(ResourceLocation.parse("minecraft:gold_ingot")));
+            MultiblockDefinitionRegistry.forRecipeLookupItem(new ResourceLocation("minecraft:gold_ingot")));
         assertEquals(List.of(),
-            MultiblockDefinitionRegistry.forRecipeLookupItem(ResourceLocation.parse("minecraft:smithing_table")));
+            MultiblockDefinitionRegistry.forRecipeLookupItem(new ResourceLocation("minecraft:smithing_table")));
     }
 
     @Test
@@ -74,10 +74,10 @@ class MultiblockDefinitionRegistryTest {
         definitions.put(gamma.id(), gamma);
         definitions.put(zeta.id(), zeta);
         Map<ResourceLocation, ResourceLocation> sources = Map.of(
-            beta.id(), ResourceLocation.parse("pack_a:universal_multiblock_viewer/multiblocks/machines/beta"),
-            alpha.id(), ResourceLocation.parse("pack_a:universal_multiblock_viewer/multiblocks/machines/alpha"),
-            gamma.id(), ResourceLocation.parse("pack_a:universal_multiblock_viewer/multiblocks/rituals/gamma"),
-            zeta.id(), ResourceLocation.parse("pack_b:universal_multiblock_viewer/multiblocks/machines/zeta")
+            beta.id(), new ResourceLocation("pack_a:universal_multiblock_viewer/multiblocks/machines/beta"),
+            alpha.id(), new ResourceLocation("pack_a:universal_multiblock_viewer/multiblocks/machines/alpha"),
+            gamma.id(), new ResourceLocation("pack_a:universal_multiblock_viewer/multiblocks/rituals/gamma"),
+            zeta.id(), new ResourceLocation("pack_b:universal_multiblock_viewer/multiblocks/machines/zeta")
         );
 
         assertEquals(List.of(alpha, beta, gamma, zeta),
@@ -90,10 +90,10 @@ class MultiblockDefinitionRegistryTest {
 
     private static MultiblockDefinition definition(String id, List<String> useItems, List<String> recipeItems) {
         BlockRequirement requirement = new BlockRequirement(List.of(new BlockOption(BlockOption.Kind.BLOCK,
-            ResourceLocation.parse("minecraft:lodestone"))), 0, "");
+            new ResourceLocation("minecraft:lodestone"))), 0, "");
         StructureVariant variant = new StructureVariant("base", "Base", 1, 1, 1,
             Map.of(new GridPos(0, 0, 0), requirement));
-        return new MultiblockDefinition(ResourceLocation.parse("test:" + id), id, "",
+        return new MultiblockDefinition(new ResourceLocation("test:" + id), id, "",
             useItems.stream().map(ResourceLocation::parse).toList(),
             recipeItems.stream().map(ResourceLocation::parse).toList(), "base", Map.of("base", variant));
     }

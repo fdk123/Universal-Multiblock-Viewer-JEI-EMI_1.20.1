@@ -9,7 +9,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.common.MinecraftForge;
 import net.sprocketgames.universalmultiblockviewer.UniversalMultiblockViewer;
 import net.sprocketgames.universalmultiblockviewer.data.MultiblockDefinitionRegistry;
 
@@ -17,7 +17,7 @@ import net.sprocketgames.universalmultiblockviewer.data.MultiblockDefinitionRegi
 @EmiEntrypoint
 public final class UniversalMultiblockViewerEmiPlugin implements EmiPlugin {
     public static final EmiRecipeCategory CATEGORY = new EmiRecipeCategory(
-        ResourceLocation.fromNamespaceAndPath(UniversalMultiblockViewer.MOD_ID, "multiblock"), EmiStack.of(Items.SPYGLASS));
+        new ResourceLocation(UniversalMultiblockViewer.MOD_ID, "multiblock"), EmiStack.of(Items.SPYGLASS));
     private static boolean inputHandlersRegistered;
 
     @Override
@@ -39,16 +39,16 @@ public final class UniversalMultiblockViewerEmiPlugin implements EmiPlugin {
     private static void registerInputHandlers() {
         if (inputHandlersRegistered) return;
         inputHandlersRegistered = true;
-        NeoForge.EVENT_BUS.addListener(EmiViewportInputHandler::onMouseScrolled);
-        NeoForge.EVENT_BUS.addListener(EmiViewportInputHandler::onMousePressed);
-        NeoForge.EVENT_BUS.addListener(EmiViewportInputHandler::onMouseDragged);
-        NeoForge.EVENT_BUS.addListener(EmiViewportInputHandler::onMouseReleased);
-        NeoForge.EVENT_BUS.addListener(EmiViewportInputHandler::tooltip);
-        NeoForge.EVENT_BUS.addListener(EmiMaterialStripInputHandler::click);
-        NeoForge.EVENT_BUS.addListener(EmiMaterialStripInputHandler::scroll);
-        NeoForge.EVENT_BUS.addListener(EmiMaterialStripInputHandler::drag);
-        NeoForge.EVENT_BUS.addListener(EmiMaterialStripInputHandler::tooltip);
-        NeoForge.EVENT_BUS.addListener(EmiLayerInputHandler::click);
-        NeoForge.EVENT_BUS.addListener(EmiLayerInputHandler::tooltip);
+        MinecraftForge.EVENT_BUS.addListener(EmiViewportInputHandler::onMouseScrolled);
+        MinecraftForge.EVENT_BUS.addListener(EmiViewportInputHandler::onMousePressed);
+        MinecraftForge.EVENT_BUS.addListener(EmiViewportInputHandler::onMouseDragged);
+        MinecraftForge.EVENT_BUS.addListener(EmiViewportInputHandler::onMouseReleased);
+        MinecraftForge.EVENT_BUS.addListener(EmiViewportInputHandler::tooltip);
+        MinecraftForge.EVENT_BUS.addListener(EmiMaterialStripInputHandler::click);
+        MinecraftForge.EVENT_BUS.addListener(EmiMaterialStripInputHandler::scroll);
+        MinecraftForge.EVENT_BUS.addListener(EmiMaterialStripInputHandler::drag);
+        MinecraftForge.EVENT_BUS.addListener(EmiMaterialStripInputHandler::tooltip);
+        MinecraftForge.EVENT_BUS.addListener(EmiLayerInputHandler::click);
+        MinecraftForge.EVENT_BUS.addListener(EmiLayerInputHandler::tooltip);
     }
 }

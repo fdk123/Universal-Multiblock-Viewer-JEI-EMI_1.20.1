@@ -17,7 +17,7 @@ import net.sprocketgames.universalmultiblockviewer.model.MultiblockDefinition;
 public final class UniversalMultiblockViewerJeiPlugin implements IModPlugin {
     private static volatile IJeiRuntime runtime;
     private static volatile List<MultiblockDefinition> registeredRecipes = List.of();
-    private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(
+    private static final ResourceLocation UID = new ResourceLocation(
         UniversalMultiblockViewer.MOD_ID,
         "jei_plugin"
     );

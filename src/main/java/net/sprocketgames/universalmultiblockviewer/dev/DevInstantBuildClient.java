@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.network.PacketDistributor;
 import net.sprocketgames.universalmultiblockviewer.viewer.ViewerState;
 
 public final class DevInstantBuildClient {
@@ -62,7 +61,7 @@ public final class DevInstantBuildClient {
             message("Build Here requires a block target.");
             return;
         }
-        PacketDistributor.sendToServer(DevInstantBuildPayload.from(anchor, activePlan, quarterTurns));
+        DevInstantBuildNetworking.CHANNEL.sendToServer(DevInstantBuildPayload.from(anchor, activePlan, quarterTurns));
         cancel();
     }
 
@@ -77,7 +76,7 @@ public final class DevInstantBuildClient {
             message("Undo requires Creative mode.");
             return 0;
         }
-        PacketDistributor.sendToServer(new DevInstantBuildUndoPayload());
+        DevInstantBuildNetworking.CHANNEL.sendToServer(new DevInstantBuildUndoPayload());
         return 1;
     }
 

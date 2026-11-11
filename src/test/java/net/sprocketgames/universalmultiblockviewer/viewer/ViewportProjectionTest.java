@@ -87,13 +87,13 @@ class ViewportProjectionTest {
 
     private static MultiblockDefinition definition(int width, int height, int depth,
                                                     Map<GridPos, BlockRequirement> blocks) {
-        return new MultiblockDefinition(ResourceLocation.parse("test:projection"), "Projection", "",
-            List.of(ResourceLocation.parse("minecraft:stick")), "base", Map.of("base",
+        return new MultiblockDefinition(new ResourceLocation("test:projection"), "Projection", "",
+            List.of(new ResourceLocation("minecraft:stick")), "base", Map.of("base",
                 new StructureVariant("base", "Base", width, height, depth, blocks)));
     }
 
     private static BlockRequirement requirement() {
         return new BlockRequirement(List.of(new BlockOption(BlockOption.Kind.BLOCK,
-            ResourceLocation.parse("minecraft:stone"))), 0, "");
+            new ResourceLocation("minecraft:stone"))), 0, "");
     }
 }

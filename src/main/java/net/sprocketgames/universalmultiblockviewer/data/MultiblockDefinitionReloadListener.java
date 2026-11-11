@@ -16,7 +16,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.neoforged.fml.ModList;
+import net.minecraftforge.fml.ModList;
 import net.sprocketgames.universalmultiblockviewer.UniversalMultiblockViewer;
 import net.sprocketgames.universalmultiblockviewer.model.MultiblockDefinition;
 import net.sprocketgames.universalmultiblockviewer.model.MultiblockMaterials;

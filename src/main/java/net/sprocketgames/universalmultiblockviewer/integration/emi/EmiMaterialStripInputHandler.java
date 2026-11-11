@@ -6,7 +6,7 @@ import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.neoforged.neoforge.client.event.ScreenEvent;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.sprocketgames.universalmultiblockviewer.client.MaterialStrip;
 import net.sprocketgames.universalmultiblockviewer.viewer.ViewerIngredientResolver;
 import net.sprocketgames.universalmultiblockviewer.viewer.ViewerState;
@@ -30,7 +30,7 @@ final class EmiMaterialStripInputHandler {
     }
     static void scroll(ScreenEvent.MouseScrolled.Pre event) {
         Active current = target(event.getMouseX(), event.getMouseY());
-        if (current != null) { current.state.scrollMaterialsSmooth(-event.getScrollDeltaY()); event.setCanceled(true); }
+        if (current != null) { current.state.scrollMaterialsSmooth(-event.getScrollDelta()); event.setCanceled(true); }
     }
     static void drag(ScreenEvent.MouseDragged.Pre event) {
         Active current = target(event.getMouseX(), event.getMouseY());

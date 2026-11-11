@@ -9,10 +9,10 @@ import net.minecraft.resources.ResourceLocation;
 import org.junit.jupiter.api.Test;
 
 class ResolvedAlternativesTest {
-    private static final ResourceLocation RUNE_TAG = ResourceLocation.parse("test:altar_runes");
-    private static final ResourceLocation BLANK_RUNE = ResourceLocation.parse("minecraft:gold_block");
-    private static final ResourceLocation RUNE = ResourceLocation.parse("minecraft:stone");
-    private static final ResourceLocation CAPSTONE = ResourceLocation.parse("minecraft:dirt");
+    private static final ResourceLocation RUNE_TAG = new ResourceLocation("test:altar_runes");
+    private static final ResourceLocation BLANK_RUNE = new ResourceLocation("minecraft:gold_block");
+    private static final ResourceLocation RUNE = new ResourceLocation("minecraft:stone");
+    private static final ResourceLocation CAPSTONE = new ResourceLocation("minecraft:dirt");
 
     @Test
     void expandsTagsDeduplicatesBlocksAndKeepsTheExplicitDefaultFirst() {
@@ -31,7 +31,7 @@ class ResolvedAlternativesTest {
 
     @Test
     void preservesDistinctBlockStatesAsSeparateChoices() {
-        ResourceLocation log = ResourceLocation.parse("minecraft:oak_log");
+        ResourceLocation log = new ResourceLocation("minecraft:oak_log");
         BlockOption facingNorth = new BlockOption(BlockOption.Kind.BLOCK, log, Map.of("axis", "x"));
         BlockOption facingSouth = new BlockOption(BlockOption.Kind.BLOCK, log, Map.of("axis", "z"));
         BlockRequirement requirement = new BlockRequirement(List.of(facingNorth, facingSouth,
@@ -46,21 +46,21 @@ class ResolvedAlternativesTest {
 
     @Test
     void retainsTagStateAndMaterialPresentationAfterExpansion() {
-        var tool = new MaterialPresentation(ResourceLocation.parse("minecraft:flint_and_steel"), MaterialPresentation.Kind.REUSABLE_TOOL);
+        var tool = new MaterialPresentation(new ResourceLocation("minecraft:flint_and_steel"), MaterialPresentation.Kind.REUSABLE_TOOL);
         BlockRequirement requirement = new BlockRequirement(List.of(
             new BlockOption(BlockOption.Kind.TAG, RUNE_TAG, Map.of("axis", "y"), tool)), 0, "Marked block");
 
         BlockRequirement resolved = ResolvedAlternatives.resolve(requirement,
             (tag, state) -> Stream.of(BLANK_RUNE, RUNE));
 
-        assertEquals(Map.of("axis", "y"), resolved.options().getFirst().stateProperties());
-        assertEquals(tool, resolved.options().getFirst().material());
+        assertEquals(Map.of("axis", "y"), resolved.options().get(0).stateProperties());
+        assertEquals(tool, resolved.options().get(0).material());
         assertEquals(List.of(BLANK_RUNE, RUNE), resolved.options().stream().map(BlockOption::id).toList());
     }
 
     @Test
     void inheritsTheExplicitDefaultPresentationForUnmappedTagMembers() {
-        var chalk = new MaterialPresentation(ResourceLocation.parse("minecraft:stick"), MaterialPresentation.Kind.REUSABLE_TOOL);
+        var chalk = new MaterialPresentation(new ResourceLocation("minecraft:stick"), MaterialPresentation.Kind.REUSABLE_TOOL);
         BlockOption defaultGlyph = new BlockOption(BlockOption.Kind.BLOCK, BLANK_RUNE, Map.of(), chalk);
         BlockRequirement requirement = new BlockRequirement(List.of(defaultGlyph,
             new BlockOption(BlockOption.Kind.TAG, RUNE_TAG)), 0, "Glyph");

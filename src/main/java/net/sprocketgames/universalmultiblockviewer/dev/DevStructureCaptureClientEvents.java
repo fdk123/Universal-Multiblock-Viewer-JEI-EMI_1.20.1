@@ -1,6 +1,6 @@
 package net.sprocketgames.universalmultiblockviewer.dev;
 
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
@@ -16,12 +16,12 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.client.event.RegisterClientCommandsEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.sprocketgames.universalmultiblockviewer.UniversalMultiblockViewer;
 import net.sprocketgames.universalmultiblockviewer.client.RuntimeGuideRefresh;
 
@@ -114,7 +114,8 @@ public final class DevStructureCaptureClientEvents {
         var bounds = DevStructureCapture.bounds();
         if (bounds.isEmpty() && DevStructureCapture.first().isEmpty()) return;
         PoseStack pose = event.getPoseStack(); pose.pushPose(); var camera = event.getCamera().getPosition(); pose.translate(-camera.x, -camera.y, -camera.z);
-        try (ByteBufferBuilder memory = new ByteBufferBuilder(4096)) {
+        try {
+            BufferBuilder memory = new BufferBuilder(4096);
             MultiBufferSource.BufferSource buffers = MultiBufferSource.immediate(memory); var vertices = buffers.getBuffer(RenderType.lines());
             if (bounds.isPresent()) { var box = bounds.get(); LevelRenderer.renderLineBox(pose, vertices, box.min().getX(), box.min().getY(), box.min().getZ(), box.max().getX() + 1, box.max().getY() + 1, box.max().getZ() + 1, 1.0F, 0.65F, 0.12F, 1.0F); }
             else DevStructureCapture.first().ifPresent(pos -> LevelRenderer.renderLineBox(pose, vertices, pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1, 1.0F, 0.65F, 0.12F, 1.0F));

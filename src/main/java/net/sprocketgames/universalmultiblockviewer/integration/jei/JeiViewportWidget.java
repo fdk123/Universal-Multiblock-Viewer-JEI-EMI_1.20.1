@@ -102,7 +102,7 @@ final class JeiViewportWidget implements IRecipeWidget, IJeiGuiEventListener, me
         int option = SelectedBlockOptions.optionAt(state, viewportMouseX, mouseY);
         if (option >= 0) {
             tooltip.addAll(net.sprocketgames.universalmultiblockviewer.viewer.ViewerIngredientResolver.materialStackFor(state.selectedRequirement().options().get(option))
-                .getTooltipLines(net.minecraft.world.item.Item.TooltipContext.EMPTY, net.minecraft.client.Minecraft.getInstance().player,
+                .getTooltipLines(net.minecraft.client.Minecraft.getInstance().player,
                     net.minecraft.world.item.TooltipFlag.Default.NORMAL));
             return;
         }
@@ -298,7 +298,7 @@ final class JeiViewportWidget implements IRecipeWidget, IJeiGuiEventListener, me
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double verticalAmount) {
         if (!inViewport(mouseX, mouseY)) return false;
         double viewportMouseX = mouseX - viewportX();
         if (SelectedBlockOptions.scrollAreaAt(state, viewportMouseX, mouseY)) {

@@ -1,7 +1,7 @@
 package net.sprocketgames.universalmultiblockviewer.dev;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.List;
 import net.minecraft.client.Minecraft;
@@ -11,12 +11,12 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.client.event.RenderGuiEvent;
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.RenderGuiEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.sprocketgames.universalmultiblockviewer.UniversalMultiblockViewer;
 
 /** In-world, non-destructive placement preview for the Build Here tool. */
@@ -39,7 +39,7 @@ public final class DevInstantBuildPlacementClientEvents {
     @SubscribeEvent
     public static void mouseScroll(InputEvent.MouseScrollingEvent event) {
         if (!DevInstantBuildClient.placementActive()) return;
-        int direction = event.getScrollDeltaY() > 0.0D ? 1 : event.getScrollDeltaY() < 0.0D ? -1 : 0;
+        int direction = event.getScrollDelta() > 0.0D ? 1 : event.getScrollDelta() < 0.0D ? -1 : 0;
         if (direction == 0) return;
         if (Screen.hasControlDown()) {
             if (direction > 0) DevInstantBuildClient.moveUp();
@@ -68,7 +68,8 @@ public final class DevInstantBuildPlacementClientEvents {
         var camera = event.getCamera().getPosition();
         pose.pushPose();
         pose.translate(-camera.x, -camera.y, -camera.z);
-        try (ByteBufferBuilder memory = new ByteBufferBuilder(Math.max(4_096, placements.size() * 320))) {
+        try {
+            BufferBuilder memory = new BufferBuilder(Math.max(4_096, placements.size() * 320));
             MultiBufferSource.BufferSource buffers = MultiBufferSource.immediate(memory);
             var vertices = buffers.getBuffer(RenderType.lines());
             for (DevInstantBuildPlan.Placement placement : placements) {

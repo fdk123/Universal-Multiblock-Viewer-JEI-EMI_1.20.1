@@ -54,12 +54,12 @@ class ViewerStateTest {
     @Test
     void variantsCycleInTheirAuthoredOrder() {
         BlockRequirement requirement = new BlockRequirement(List.of(new BlockOption(BlockOption.Kind.BLOCK,
-            ResourceLocation.parse("minecraft:stone"))), 0, "");
+            new ResourceLocation("minecraft:stone"))), 0, "");
         Map<String, StructureVariant> variants = new java.util.LinkedHashMap<>();
         variants.put("second", new StructureVariant("second", "Second", 1, 1, 1, Map.of(CELL, requirement)));
         variants.put("first", new StructureVariant("first", "First", 1, 1, 1, Map.of(CELL, requirement)));
-        MultiblockDefinition definition = new MultiblockDefinition(ResourceLocation.parse("test:ordered"), "Ordered", "",
-            List.of(ResourceLocation.parse("minecraft:stick")), "second", variants);
+        MultiblockDefinition definition = new MultiblockDefinition(new ResourceLocation("test:ordered"), "Ordered", "",
+            List.of(new ResourceLocation("minecraft:stick")), "second", variants);
         ViewerState state = new ViewerState(definition);
 
         state.cycleVariant(1);
@@ -70,18 +70,18 @@ class ViewerStateTest {
     @Test
     void selectedPositionCyclesItsOwnPresentationAlternative() {
         BlockRequirement alternatives = new BlockRequirement(List.of(
-            new BlockOption(BlockOption.Kind.BLOCK, ResourceLocation.parse("minecraft:stone")),
-            new BlockOption(BlockOption.Kind.BLOCK, ResourceLocation.parse("minecraft:granite"))), 0, "Frame");
-        MultiblockDefinition definition = new MultiblockDefinition(ResourceLocation.parse("test:alternatives"), "Test", "",
-            List.of(ResourceLocation.parse("minecraft:stick")), "base", Map.of("base",
+            new BlockOption(BlockOption.Kind.BLOCK, new ResourceLocation("minecraft:stone")),
+            new BlockOption(BlockOption.Kind.BLOCK, new ResourceLocation("minecraft:granite"))), 0, "Frame");
+        MultiblockDefinition definition = new MultiblockDefinition(new ResourceLocation("test:alternatives"), "Test", "",
+            List.of(new ResourceLocation("minecraft:stick")), "base", Map.of("base",
                 new StructureVariant("base", "Base", 1, 1, 1, Map.of(CELL, alternatives))));
         ViewerState state = new ViewerState(definition);
         state.selectOrToggle(CELL);
         state.cycleSelectedOption(1);
-        assertEquals(ResourceLocation.parse("minecraft:granite"), state.displayedBlock(CELL).id());
+        assertEquals(new ResourceLocation("minecraft:granite"), state.displayedBlock(CELL).id());
         assertEquals(1, state.selectedOption());
         state.setSelectedOption(0);
-        assertEquals(ResourceLocation.parse("minecraft:stone"), state.displayedBlock(CELL).id());
+        assertEquals(new ResourceLocation("minecraft:stone"), state.displayedBlock(CELL).id());
     }
 
     @Test
@@ -96,10 +96,10 @@ class ViewerStateTest {
         Map<GridPos, BlockRequirement> cells = new java.util.LinkedHashMap<>();
         for (int x = 0; x < 14; x++) {
             cells.put(new GridPos(x, 0, 0), new BlockRequirement(List.of(new BlockOption(BlockOption.Kind.BLOCK,
-                ResourceLocation.parse("test:block_" + x))), 0, ""));
+                new ResourceLocation("test:block_" + x))), 0, ""));
         }
-        MultiblockDefinition definition = new MultiblockDefinition(ResourceLocation.parse("test:materials"), "Test", "",
-            List.of(ResourceLocation.parse("minecraft:stick")), "base", Map.of("base",
+        MultiblockDefinition definition = new MultiblockDefinition(new ResourceLocation("test:materials"), "Test", "",
+            List.of(new ResourceLocation("minecraft:stick")), "base", Map.of("base",
                 new StructureVariant("base", "Base", 14, 1, 1, cells)));
         ViewerState state = new ViewerState(definition);
 
@@ -118,10 +118,10 @@ class ViewerStateTest {
         Map<GridPos, BlockRequirement> cells = new java.util.LinkedHashMap<>();
         for (int x = 0; x < 14; x++) {
             cells.put(new GridPos(x, 0, 0), new BlockRequirement(List.of(new BlockOption(BlockOption.Kind.BLOCK,
-                ResourceLocation.parse("test:block_" + x))), 0, ""));
+                new ResourceLocation("test:block_" + x))), 0, ""));
         }
-        MultiblockDefinition definition = new MultiblockDefinition(ResourceLocation.parse("test:smooth_materials"), "Test", "",
-            List.of(ResourceLocation.parse("minecraft:stick")), "base", Map.of("base",
+        MultiblockDefinition definition = new MultiblockDefinition(new ResourceLocation("test:smooth_materials"), "Test", "",
+            List.of(new ResourceLocation("minecraft:stick")), "base", Map.of("base",
                 new StructureVariant("base", "Base", 14, 1, 1, cells)));
         ViewerState state = new ViewerState(definition);
 
@@ -141,10 +141,10 @@ class ViewerStateTest {
         Map<GridPos, BlockRequirement> cells = new java.util.LinkedHashMap<>();
         for (int x = 0; x < 14; x++) {
             cells.put(new GridPos(x, 0, 0), new BlockRequirement(List.of(new BlockOption(BlockOption.Kind.BLOCK,
-                ResourceLocation.parse("test:block_" + x))), 0, ""));
+                new ResourceLocation("test:block_" + x))), 0, ""));
         }
-        MultiblockDefinition definition = new MultiblockDefinition(ResourceLocation.parse("test:partial_materials"), "Test", "",
-            List.of(ResourceLocation.parse("minecraft:stick")), "base", Map.of("base",
+        MultiblockDefinition definition = new MultiblockDefinition(new ResourceLocation("test:partial_materials"), "Test", "",
+            List.of(new ResourceLocation("minecraft:stick")), "base", Map.of("base",
                 new StructureVariant("base", "Base", 14, 1, 1, cells)));
         ViewerState state = new ViewerState(definition);
         state.scrollMaterialsSmooth(1.0D);
@@ -159,10 +159,10 @@ class ViewerStateTest {
         Map<GridPos, BlockRequirement> cells = new java.util.LinkedHashMap<>();
         for (int x = 0; x < 14; x++) {
             cells.put(new GridPos(x, 0, 0), new BlockRequirement(List.of(new BlockOption(BlockOption.Kind.BLOCK,
-                ResourceLocation.parse("test:block_" + x))), 0, ""));
+                new ResourceLocation("test:block_" + x))), 0, ""));
         }
-        MultiblockDefinition definition = new MultiblockDefinition(ResourceLocation.parse("test:scrollbar_end"), "Test", "",
-            List.of(ResourceLocation.parse("minecraft:stick")), "base", Map.of("base",
+        MultiblockDefinition definition = new MultiblockDefinition(new ResourceLocation("test:scrollbar_end"), "Test", "",
+            List.of(new ResourceLocation("minecraft:stick")), "base", Map.of("base",
                 new StructureVariant("base", "Base", 14, 1, 1, cells)));
         ViewerState state = new ViewerState(definition);
 
@@ -239,11 +239,11 @@ class ViewerStateTest {
 
     @Test
     void alternativeHighlightsDefaultOffAndNeverChangeTheSelectedMaterial() {
-        BlockOption stone = new BlockOption(BlockOption.Kind.BLOCK, ResourceLocation.parse("minecraft:stone"));
-        BlockOption granite = new BlockOption(BlockOption.Kind.BLOCK, ResourceLocation.parse("minecraft:granite"));
+        BlockOption stone = new BlockOption(BlockOption.Kind.BLOCK, new ResourceLocation("minecraft:stone"));
+        BlockOption granite = new BlockOption(BlockOption.Kind.BLOCK, new ResourceLocation("minecraft:granite"));
         BlockRequirement alternatives = new BlockRequirement(List.of(stone, granite), 0, "");
-        MultiblockDefinition definition = new MultiblockDefinition(ResourceLocation.parse("test:highlight"), "Test", "",
-            List.of(ResourceLocation.parse("minecraft:stick")), "base", Map.of("base",
+        MultiblockDefinition definition = new MultiblockDefinition(new ResourceLocation("test:highlight"), "Test", "",
+            List.of(new ResourceLocation("minecraft:stick")), "base", Map.of("base",
                 new StructureVariant("base", "Base", 1, 1, 1, Map.of(CELL, alternatives))));
         ViewerState state = new ViewerState(definition);
         state.selectOrToggle(CELL);
@@ -289,8 +289,8 @@ class ViewerStateTest {
 
     private static MultiblockDefinition definition() {
         BlockRequirement requirement = new BlockRequirement(List.of(new BlockOption(BlockOption.Kind.BLOCK,
-            ResourceLocation.parse("minecraft:stone"))), 0, "");
-        return new MultiblockDefinition(ResourceLocation.parse("test:viewer"), "Test", "", List.of(ResourceLocation.parse("minecraft:stick")),
+            new ResourceLocation("minecraft:stone"))), 0, "");
+        return new MultiblockDefinition(new ResourceLocation("test:viewer"), "Test", "", List.of(new ResourceLocation("minecraft:stick")),
             "base", Map.of(
                 "base", new StructureVariant("base", "Base", 1, 1, 1, Map.of(CELL, requirement)),
                 "other", new StructureVariant("other", "Other", 1, 1, 1, Map.of())

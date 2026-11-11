@@ -1,0 +1,123 @@
+{
+  "format": 1,
+  "id": "umv_occultism:craft_marid",
+  "title": "Uphyxes Inverted Tower",
+  "description": "Occultism ritual pentacle for Minecraft 1.20.1.",
+  "provenance": {
+    "source_mod": "occultism",
+    "tested_version": "1.158.0",
+    "notes": "Generated from Occultism Modonomicon multiblock craft_marid."
+  },
+  "lookups": {
+    "U": [
+      "occultism:golden_sacrificial_bowl"
+    ]
+  },
+  "default_variant": "ritual_layout",
+  "variants": [
+    {
+      "id": "ritual_layout",
+      "title": "Ritual layout",
+      "palette": {
+        "0": {
+          "any_of": [
+            {
+              "block": "occultism:golden_sacrificial_bowl"
+            }
+          ],
+          "default": "occultism:golden_sacrificial_bowl"
+        },
+        "C": {
+          "any_of": [
+            {
+              "block": "minecraft:candle"
+            },
+            {
+              "tag": "minecraft:candles"
+            }
+          ],
+          "default": "minecraft:candle"
+        },
+        "G": {
+          "any_of": [
+            {
+              "block": "occultism:chalk_glyph_gold",
+              "material": {
+                "item": "occultism:chalk_gold",
+                "kind": "reusable_tool"
+              }
+            }
+          ],
+          "default": "occultism:chalk_glyph_gold"
+        },
+        "N": {
+          "any_of": [
+            {
+              "block": "minecraft:wither_skeleton_skull"
+            }
+          ],
+          "default": "minecraft:wither_skeleton_skull"
+        },
+        "R": {
+          "any_of": [
+            {
+              "block": "occultism:chalk_glyph_red",
+              "material": {
+                "item": "occultism:chalk_red",
+                "kind": "reusable_tool"
+              }
+            }
+          ],
+          "default": "occultism:chalk_glyph_red"
+        },
+        "S": {
+          "any_of": [
+            {
+              "block": "occultism:spirit_attuned_crystal"
+            }
+          ],
+          "default": "occultism:spirit_attuned_crystal"
+        },
+        "W": {
+          "any_of": [
+            {
+              "block": "occultism:chalk_glyph_white",
+              "material": {
+                "item": "occultism:chalk_white",
+                "kind": "reusable_tool"
+              }
+            }
+          ],
+          "default": "occultism:chalk_glyph_white"
+        },
+        "Z": {
+          "any_of": [
+            {
+              "block": "minecraft:skeleton_skull"
+            }
+          ],
+          "default": "minecraft:skeleton_skull"
+        }
+      },
+      "layers": [
+        [
+          "       Z       ",
+          "      RRR      ",
+          "     RCWCR     ",
+          "    R  W  R    ",
+          "   RGSWNWSGR   ",
+          "  R SGW WGS R  ",
+          " RC WW   WW CR ",
+          "ZRWWN  0  NWWRZ",
+          " RC WW   WW CR ",
+          "  R SGW WGS R  ",
+          "   RGSWNWSGR   ",
+          "    R  W  R    ",
+          "     RCWCR     ",
+          "      RRR      ",
+          "       Z       "
+        ]
+      ]
+    }
+  ]
+}

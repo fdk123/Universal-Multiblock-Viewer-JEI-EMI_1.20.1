@@ -6,7 +6,7 @@ import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.neoforged.neoforge.client.event.ScreenEvent;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.sprocketgames.universalmultiblockviewer.model.GridPos;
 import net.sprocketgames.universalmultiblockviewer.viewer.ViewerLayout;
 import net.sprocketgames.universalmultiblockviewer.viewer.ViewportProjection;
@@ -51,11 +51,11 @@ final class EmiViewportInputHandler {
         if (!inViewport(viewport.state(), x, y)) return;
         double viewportX = x - ViewerPanelLayout.viewportX(viewport.state());
         if (SelectedBlockOptions.scrollAreaAt(viewport.state(), viewportX, y)) {
-            SelectedBlockOptions.scroll(viewport.state(), -event.getScrollDeltaY());
+            SelectedBlockOptions.scroll(viewport.state(), -event.getScrollDelta());
             event.setCanceled(true);
             return;
         }
-        viewport.state().zoomBy(event.getScrollDeltaY());
+        viewport.state().zoomBy(event.getScrollDelta());
         event.setCanceled(true);
     }
 

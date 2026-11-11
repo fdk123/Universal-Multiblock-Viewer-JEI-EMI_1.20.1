@@ -3,10 +3,10 @@ package net.sprocketgames.universalmultiblockviewer.client;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.sprocketgames.universalmultiblockviewer.UniversalMultiblockViewer;
 import net.sprocketgames.universalmultiblockviewer.data.MultiblockDefinitionRegistry;
 
@@ -26,6 +26,6 @@ public final class ClientTooltipEvents {
         if (!uses && !recipes) return;
         String text = uses && recipes ? "Press R or U for Multiblock Guide"
             : recipes ? "Press R for Multiblock Guide" : "Press U for Multiblock Guide";
-        event.getToolTip().add(Component.literal(text).withColor(GUIDE_AMBER));
+        event.getToolTip().add(Component.literal(text).withStyle(style -> style.withColor(GUIDE_AMBER)));
     }
 }

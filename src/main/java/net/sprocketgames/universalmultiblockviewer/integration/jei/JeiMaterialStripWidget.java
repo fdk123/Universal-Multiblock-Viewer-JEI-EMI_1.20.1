@@ -32,8 +32,7 @@ final class JeiMaterialStripWidget implements IRecipeWidget, IJeiGuiEventListene
         var material = MaterialStrip.at(state, stripX(mouseX), stripY(mouseY));
         if (material != null) {
             var stack = ViewerIngredientResolver.materialStackFor(material.requirement().defaultBlock());
-            tooltip.addAll(stack.getTooltipLines(net.minecraft.world.item.Item.TooltipContext.EMPTY,
-                net.minecraft.client.Minecraft.getInstance().player, net.minecraft.world.item.TooltipFlag.Default.NORMAL));
+            tooltip.addAll(stack.getTooltipLines(                net.minecraft.client.Minecraft.getInstance().player, net.minecraft.world.item.TooltipFlag.Default.NORMAL));
             tooltip.add(Component.literal("x" + material.count()));
         }
     }
@@ -51,8 +50,8 @@ final class JeiMaterialStripWidget implements IRecipeWidget, IJeiGuiEventListene
         }
         return false;
     }
-    @Override public boolean mouseScrolled(double mouseX, double mouseY, double horizontal, double vertical) {
-        state.scrollMaterialsSmooth(-vertical);
+    @Override public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        state.scrollMaterialsSmooth(-delta);
         return true;
     }
     @Override public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {

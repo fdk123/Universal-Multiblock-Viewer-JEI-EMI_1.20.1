@@ -1,8 +1,7 @@
 package net.sprocketgames.universalmultiblockviewer;
 
 import com.mojang.logging.LogUtils;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod;
 import net.sprocketgames.universalmultiblockviewer.dev.DevInstantBuildNetworking;
 import org.slf4j.Logger;
 
@@ -12,8 +11,8 @@ public final class UniversalMultiblockViewer {
     public static final String MOD_ID = "universal_multiblock_viewer";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public UniversalMultiblockViewer(ModContainer modContainer) {
-        modContainer.getEventBus().addListener(DevInstantBuildNetworking::register);
+    public UniversalMultiblockViewer() {
+        DevInstantBuildNetworking.register();
         LOGGER.info("Universal Multiblock Viewer is loading");
     }
 }

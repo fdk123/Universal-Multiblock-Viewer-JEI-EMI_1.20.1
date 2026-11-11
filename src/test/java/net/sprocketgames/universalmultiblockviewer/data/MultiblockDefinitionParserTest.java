@@ -22,13 +22,13 @@ class MultiblockDefinitionParserTest {
 
         assertEquals(2, definition.initialVariant().cells().size());
         assertEquals("minecraft:stone", definition.initialVariant().cells().values().iterator().next().defaultBlock().id().toString());
-        assertEquals(java.util.List.of(ResourceLocation.parse("minecraft:stick")), definition.useLookupItems());
-        assertEquals(java.util.List.of(ResourceLocation.parse("minecraft:stick"), ResourceLocation.parse("minecraft:lodestone")), definition.recipeLookupItems());
+        assertEquals(java.util.List.of(new ResourceLocation("minecraft:stick")), definition.useLookupItems());
+        assertEquals(java.util.List.of(new ResourceLocation("minecraft:stick"), new ResourceLocation("minecraft:lodestone")), definition.recipeLookupItems());
     }
 
     @Test
     void parsesOptionalPaletteEntriesWithoutChangingRequiredDefinitions() {
-        MultiblockDefinition definition = MultiblockDefinitionParser.parse(ResourceLocation.parse("test:optional"), JsonParser.parseString("""
+        MultiblockDefinition definition = MultiblockDefinitionParser.parse(new ResourceLocation("test:optional"), JsonParser.parseString("""
             {"format":1,"title":"Optional","lookups":{"U":["minecraft:stone"]},"variants":[
               {"id":"base","palette":{
                 "R":{"block":"minecraft:stone"},
@@ -40,7 +40,7 @@ class MultiblockDefinitionParserTest {
         var cells = definition.variants().get("base").cells();
         assertFalse(cells.get(new GridPos(0, 0, 0)).optional());
         assertTrue(cells.get(new GridPos(1, 0, 0)).optional());
-        assertEquals(ResourceLocation.parse("minecraft:dirt"), cells.get(new GridPos(1, 0, 0)).defaultBlock().id());
+        assertEquals(new ResourceLocation("minecraft:dirt"), cells.get(new GridPos(1, 0, 0)).defaultBlock().id());
     }
 
     @Test
@@ -51,7 +51,7 @@ class MultiblockDefinitionParserTest {
             ]}
             """);
         assertEquals(java.util.List.of(), definition.useLookupItems());
-        assertEquals(java.util.List.of(ResourceLocation.parse("minecraft:stick")), definition.recipeLookupItems());
+        assertEquals(java.util.List.of(new ResourceLocation("minecraft:stick")), definition.recipeLookupItems());
     }
 
     @Test
@@ -125,7 +125,7 @@ class MultiblockDefinitionParserTest {
             """);
         var options = definition.initialVariant().cells().values().iterator().next().options();
         assertEquals(2, options.size());
-        assertEquals("x", options.getFirst().stateProperties().get("axis"));
+        assertEquals("x", options.get(0).stateProperties().get("axis"));
         assertEquals("z", options.get(1).stateProperties().get("axis"));
     }
 
@@ -139,7 +139,7 @@ class MultiblockDefinitionParserTest {
             """);
         var option = definition.initialVariant().cells().values().iterator().next().defaultBlock();
         assertEquals("north", option.stateProperties().get("facing"));
-        assertEquals(ResourceLocation.parse("minecraft:flint_and_steel"), option.material().item());
+        assertEquals(new ResourceLocation("minecraft:flint_and_steel"), option.material().item());
         assertEquals(net.sprocketgames.universalmultiblockviewer.model.MaterialPresentation.Kind.REUSABLE_TOOL, option.material().kind());
     }
 
@@ -154,6 +154,6 @@ class MultiblockDefinitionParserTest {
     }
 
     private static net.sprocketgames.universalmultiblockviewer.model.MultiblockDefinition parse(String json) {
-        return MultiblockDefinitionParser.parse(ResourceLocation.parse("test:guide"), JsonParser.parseString(json).getAsJsonObject());
+        return MultiblockDefinitionParser.parse(new ResourceLocation("test:guide"), JsonParser.parseString(json).getAsJsonObject());
     }
 }

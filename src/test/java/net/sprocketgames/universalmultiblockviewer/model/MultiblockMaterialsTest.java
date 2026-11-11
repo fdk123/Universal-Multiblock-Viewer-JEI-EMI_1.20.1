@@ -12,8 +12,8 @@ class MultiblockMaterialsTest {
     @Test
     void alternativesContributeOnlyTheirAuthoredPresentationDefault() {
         BlockRequirement alternatives = new BlockRequirement(List.of(
-            new BlockOption(BlockOption.Kind.BLOCK, ResourceLocation.parse("minecraft:stone")),
-            new BlockOption(BlockOption.Kind.BLOCK, ResourceLocation.parse("minecraft:granite"))), 0, "Frame");
+            new BlockOption(BlockOption.Kind.BLOCK, new ResourceLocation("minecraft:stone")),
+            new BlockOption(BlockOption.Kind.BLOCK, new ResourceLocation("minecraft:granite"))), 0, "Frame");
         Map<GridPos, BlockRequirement> cells = new LinkedHashMap<>();
         cells.put(new GridPos(0, 0, 0), alternatives);
         cells.put(new GridPos(1, 0, 0), alternatives);
@@ -23,15 +23,15 @@ class MultiblockMaterialsTest {
         List<MaterialEntry> materials = MultiblockMaterials.forVariant(variant);
 
         assertEquals(1, materials.size());
-        assertEquals(ResourceLocation.parse("minecraft:stone"), materials.getFirst().requirement().defaultBlock().id());
-        assertEquals(3, materials.getFirst().count());
+        assertEquals(new ResourceLocation("minecraft:stone"), materials.get(0).requirement().defaultBlock().id());
+        assertEquals(3, materials.get(0).count());
     }
 
     @Test
     void combinesDifferentPositionRequirementsWhenTheirDisplayedBlockMatches() {
-        BlockOption rune = new BlockOption(BlockOption.Kind.BLOCK, ResourceLocation.parse("minecraft:gold_block"));
+        BlockOption rune = new BlockOption(BlockOption.Kind.BLOCK, new ResourceLocation("minecraft:gold_block"));
         BlockRequirement upgradeable = new BlockRequirement(List.of(rune,
-            new BlockOption(BlockOption.Kind.BLOCK, ResourceLocation.parse("minecraft:diamond_block"))), 0, "Upgradeable rune");
+            new BlockOption(BlockOption.Kind.BLOCK, new ResourceLocation("minecraft:diamond_block"))), 0, "Upgradeable rune");
         BlockRequirement fixed = new BlockRequirement(List.of(rune), 0, "Fixed rune");
         Map<GridPos, BlockRequirement> cells = new LinkedHashMap<>();
         for (int index = 0; index < 4; index++) cells.put(new GridPos(index, 0, 0), upgradeable);
@@ -40,16 +40,16 @@ class MultiblockMaterialsTest {
         List<MaterialEntry> materials = MultiblockMaterials.forVariant(new StructureVariant("tier_1", "Tier 1", 4, 2, 1, cells));
 
         assertEquals(1, materials.size());
-        assertEquals(rune, materials.getFirst().requirement().defaultBlock());
-        assertEquals(8, materials.getFirst().count());
+        assertEquals(rune, materials.get(0).requirement().defaultBlock());
+        assertEquals(8, materials.get(0).count());
     }
 
     @Test
     void reusableToolsCountOnceWhileRetainingAllPlacedPositions() {
-        BlockOption chalkMark = new BlockOption(BlockOption.Kind.BLOCK, ResourceLocation.parse("minecraft:stone"), Map.of("axis", "x"),
-            new MaterialPresentation(ResourceLocation.parse("minecraft:flint_and_steel"), MaterialPresentation.Kind.REUSABLE_TOOL));
-        BlockOption anotherOrientation = new BlockOption(BlockOption.Kind.BLOCK, ResourceLocation.parse("minecraft:stone"), Map.of("axis", "z"),
-            new MaterialPresentation(ResourceLocation.parse("minecraft:flint_and_steel"), MaterialPresentation.Kind.REUSABLE_TOOL));
+        BlockOption chalkMark = new BlockOption(BlockOption.Kind.BLOCK, new ResourceLocation("minecraft:stone"), Map.of("axis", "x"),
+            new MaterialPresentation(new ResourceLocation("minecraft:flint_and_steel"), MaterialPresentation.Kind.REUSABLE_TOOL));
+        BlockOption anotherOrientation = new BlockOption(BlockOption.Kind.BLOCK, new ResourceLocation("minecraft:stone"), Map.of("axis", "z"),
+            new MaterialPresentation(new ResourceLocation("minecraft:flint_and_steel"), MaterialPresentation.Kind.REUSABLE_TOOL));
         Map<GridPos, BlockRequirement> cells = new LinkedHashMap<>();
         cells.put(new GridPos(0, 0, 0), new BlockRequirement(List.of(chalkMark), 0, "Mark"));
         cells.put(new GridPos(1, 0, 0), new BlockRequirement(List.of(anotherOrientation), 0, "Mark"));
@@ -58,8 +58,8 @@ class MultiblockMaterialsTest {
         List<MaterialEntry> materials = MultiblockMaterials.forVariant(new StructureVariant("marks", "Marks", 3, 1, 1, cells));
 
         assertEquals(1, materials.size());
-        assertEquals(1, materials.getFirst().count());
-        assertEquals(3, materials.getFirst().placedCount());
-        assertEquals(MaterialPresentation.Kind.REUSABLE_TOOL, materials.getFirst().kind());
+        assertEquals(1, materials.get(0).count());
+        assertEquals(3, materials.get(0).placedCount());
+        assertEquals(MaterialPresentation.Kind.REUSABLE_TOOL, materials.get(0).kind());
     }
 }
